@@ -1,18 +1,20 @@
-{ stdenv, fetchFromGitHub, cmake, ninja, pkg-config, clang, lld, python3 }:
+{ stdenv, fetchFromGitHub, cmake, ninja, pkg-config, clang, lld, python3, utf8cpp }:
 
 let
 
   llvmsrc = fetchFromGitHub {
     owner = "llvm";
     repo = "llvm-project";
-    rev = "6d43651b3680e5d16d58296c02b0e7584f1aa7ea";
-    sha256 = "sha256-hhraGUKqpVt6vB8tFO6f4X7PSJgI/V4hxb7tgb14eBk=";
+    # rev = "6d43651b3680e5d16d58296c02b0e7584f1aa7ea";
+    rev = "20d454c79bbca7822eee88d188afb7a8747dac58";
+    # sha256 = "sha256-hhrbGUKqpVt6vB8tFO6f4X7PSJgI/V4hxb7tgb14eBk=";
+    sha256 = "sha256-zyKTTt7Cm/jrYpGIgRTE8w+rSMNUXrwZKRnv4540cpE= ";
   };
 in
 
 stdenv.mkDerivation {
   pname = "mlir";
-  version = "6d43651";
+  version = "20d454";
   src = "${llvmsrc}";
 
  # sourceRoot = "${src.name}/${targetDir}";
@@ -29,6 +31,7 @@ stdenv.mkDerivation {
     clang
     lld
     pkg-config
+    utf8cpp
   ];
 
   propagatedBuildInputs = [

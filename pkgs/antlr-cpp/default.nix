@@ -1,26 +1,20 @@
-{ stdenv, fetchzip, fetchFromGitHub, cmake, ninja, pkg-config, openjdk }:
+{ stdenv, fetchzip, fetchFromGitHub, cmake, ninja, pkg-config, openjdk, antlr, libuuid, utf8cpp, version ? "4.9.2"}:
 
 let
   antlrsrc = fetchFromGitHub {
     owner = "antlr";
     repo = "antlr4";
-    rev = "d2e25842dfa1a7daadfce6fdf2197df5f2b7589e";
-    sha256 = "sha256-T5mo6tnnMbYsI8Y3NiImIOjHroEN4xymIEzabHx3EYY=";
+    rev = "${version}";
+     #sha256 = "sha256-t9QFvIkqmiNPcMwEDJwPgvTzhI9eIi/I8zEK4QV9+GY=";
+    sha256 = "sha256-FQeb1P9/QLZtw9leWvnx0DshEqgqQI3LCpieybFjw6k=";
   };
-
-  url = "https://www.antlr.org/download/antlr4-cpp-runtime-4.13.0-source.zip";
 in
-
 stdenv.mkDerivation {
   pname = "antlr-cpp";
-  version = "master";
+  version = "${version}";
   src = "${antlrsrc}/runtime/Cpp";
-  # src = "${antlrsrc}/runtime/Cpp";
-  # src = fetchzip {
-  #   inherit url;
-  #   sha256 = "sha256-dRo9LMYAdhRwg4w4s/LhWwMGkG90VkIxCMVp9wfrGLY=";
-  #   stripRoot=false;
-  # };
+  # patches = [ ../../patches/0000-antlr-silence-compiler-warnings.patch ];
+  # patchFlags = "-Np0";
 
   buildInputs = [
     cmake
@@ -30,10 +24,17 @@ stdenv.mkDerivation {
 
   propagatedBuildInputs = [
     openjdk
+    libuuid.dev
+    utf8cpp
   ];
 
   cmakeFlags = [
-    "-DANTLR_BUILD_CPP_TESTS=OFF"
-    "-DANTLR4_INSTALL=True"
+    # "-DANTLR_BUILD_CPP_TESTS=OFF"
+    "-DANTLR4_INSTALL=ON"
+    # "-DUTFCPP_DIR=${utf8cpp}/include"
   ];
+
+  fixupPhase = ''
+    cp -r ${utf8cpp}/include/utf8cpp/* $out/include
+  '';
 }
