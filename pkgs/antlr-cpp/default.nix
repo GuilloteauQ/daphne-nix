@@ -32,9 +32,10 @@ stdenv.mkDerivation {
     # "-DANTLR_BUILD_CPP_TESTS=OFF"
     "-DANTLR4_INSTALL=ON"
     # "-DUTFCPP_DIR=${utf8cpp}/include"
+    # "-DCMAKE_PREFIX_PATH=\"${utf8cpp}/include/utf8cpp\""
   ];
 
   fixupPhase = ''
-    cp -r ${utf8cpp}/include/utf8cpp/* $out/include
+    cp -r ${utf8cpp}/include/utf8cpp/* $out/include/antlr4-runtime/
   '';
 }

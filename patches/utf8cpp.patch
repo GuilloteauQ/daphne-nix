@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 03127b3c..ee725687 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,6 +28,8 @@ set(CMAKE_CXX_FLAGS_DEBUG="${CMAKE_CXX_FLAGS_DEBUG} -O0")
+ # silence a warning about DEPFILE path transformations (used in LLVM)
+ cmake_policy(SET CMP0116 OLD)
+ 
++find_package(utf8cpp REQUIRED)
++
+ # *****************************************************************************
+ # Related to MLIR/LLVM
+ # *****************************************************************************
+diff --git a/src/runtime/local/kernels/CMakeLists.txt b/src/runtime/local/kernels/CMakeLists.txt
+index 227ee3a2..53e317cf 100644
+--- a/src/runtime/local/kernels/CMakeLists.txt
++++ b/src/runtime/local/kernels/CMakeLists.txt
+@@ -78,7 +78,7 @@ add_custom_command(
+         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src/runtime/local/kernels/
+ )
+ 
+-list(APPEND LIBS DataStructures IO BLAS::BLAS MLIRParser)
++list(APPEND LIBS DataStructures IO BLAS::BLAS MLIRParser utf8cpp)
+ 
+ set(PREFIX ${PROJECT_SOURCE_DIR}/src/runtime/local/kernels/)
+ set(HEADERS_cpp_kernels

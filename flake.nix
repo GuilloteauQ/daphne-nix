@@ -15,20 +15,20 @@
     in
     {
       packages.${system} = rec {
+        abseil-cpp = pkgs.abseil-cpp_202111.overrideAttrs (finalAttrs: previousAttrs: {
+        patches = [ ./patches/0002-absl-stdmax-params.patch ];
+        cmakeFlags = previousAttrs.cmakeFlags ++ [
+            "-DCMAKE_POSITION_INDEPENDENT_CODE=TRUE"
+            "-DCMAKE_CXX_STANDARD=17"
+            "-DABSL_PROPAGATE_CXX_STD=ON"
+        ];
+    });
         spdlog = pkgs.spdlog.overrideAttrs( finalAttrs: previousAttrs: {
             cmakeFlags = previousAttrs.cmakeFlags ++ [ "-DCMAKE_POSITION_INDEPENDENT_CODE=ON" "-DSPDLOG_FMT_EXTERNAL=OFF" ];
             propagatedBuildInputs = previousAttrs.propagatedBuildInputs ++ [ pkgs.utf8cpp ];
         });
-        my_antlr = pkgs.antlr.overrideAttrs (finalAttrs: previousAttrs: {
-            version = antlr_version;
-            src = pkgs.fetchurl {
-                url = "https://www.antlr.org/download/antlr-${antlr_version}-complete.jar";
-                # sha256 = "sha256-uxF7FHZpHcKRWjGO/Tb4lXwK2TRH+x2sARB+sV/hN80=";
-                sha256 = "sha256-r81AlG095NgeKNfIjUZyieBYcoXSetsXKuzFSUoX3zY=";
-            };
-        });
-        antlr-cpp = pkgs.callPackage ./pkgs/antlr-cpp { version = antlr_version;};
-        daphne = pkgs.callPackage ./pkgs/daphne { inherit antlr-cpp mlir; grpc = pkgs21.grpc; nlohmann_json = pkgs21.nlohmann_json; spdlog = spdlog.dev; antlr = my_antlr; };
+        antlr-cpp = pkgs.callPackage ./pkgs/antlr-cpp { version = pkgs.antlr4_9.version;};
+        daphne = pkgs.callPackage ./pkgs/daphne { inherit antlr-cpp mlir; grpc = pkgs21.grpc; nlohmann_json = pkgs21.nlohmann_json; spdlog = spdlog.dev; antlr = pkgs.antlr4_9; abseil-cpp = abseil-cpp; };
         mlir = pkgs.callPackage ./pkgs/mlir { };
       };
     };
