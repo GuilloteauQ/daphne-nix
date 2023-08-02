@@ -5,37 +5,31 @@ let
     owner = "antlr";
     repo = "antlr4";
     rev = "${version}";
-     #sha256 = "sha256-t9QFvIkqmiNPcMwEDJwPgvTzhI9eIi/I8zEK4QV9+GY=";
-    sha256 = "sha256-FQeb1P9/QLZtw9leWvnx0DshEqgqQI3LCpieybFjw6k=";
+    # sha256 = "sha256-FQeb1P9/QLZtw9leWvnx0DshEqgqQI3LCpieybFjw6k=";
+    sha256 = "sha256-t9QFvIkqmiNPcMwEDJwPgvTzhI9eIi/I8zEK4QV9+GY=";
   };
 in
 stdenv.mkDerivation {
   pname = "antlr-cpp";
   version = "${version}";
   src = "${antlrsrc}/runtime/Cpp";
-  # patches = [ ../../patches/0000-antlr-silence-compiler-warnings.patch ];
-  # patchFlags = "-Np0";
+  patches = [ 
+    ../../patches/antlr4_9_2.patch
+    ../../patches/0000-antlr-silence-compiler-warnings.patch
+    #../../patches/0001-antlr-gtest-silence-warnings.patch
+  ];
 
   buildInputs = [
     cmake
     ninja
     pkg-config
-  ];
-
-  propagatedBuildInputs = [
-    openjdk
     libuuid.dev
     utf8cpp
+    openjdk
   ];
 
   cmakeFlags = [
-    # "-DANTLR_BUILD_CPP_TESTS=OFF"
     "-DANTLR4_INSTALL=ON"
-    # "-DUTFCPP_DIR=${utf8cpp}/include"
-    # "-DCMAKE_PREFIX_PATH=\"${utf8cpp}/include/utf8cpp\""
+    "-DUTFCPP_DIR=${utf8cpp}/include/utf8cpp"
   ];
-
-  fixupPhase = ''
-    cp -r ${utf8cpp}/include/utf8cpp/* $out/include/antlr4-runtime/
-  '';
 }

@@ -1,26 +1,25 @@
---- runtime/src/atn/ATNState.h       2021-07-14 14:33:34.944682323 +0200
-+++ runtime/src/atn/ATNState.h_fixed 2021-07-14 14:29:51.303066228 +0200
-@@ -70,7 +70,9 @@
+diff --git a/runtime/src/atn/ATNState.h b/runtime/src/atn/ATNState.h
+index 8ed613735..b6f2eefd2 100755
+--- a/runtime/src/atn/ATNState.h
++++ b/runtime/src/atn/ATNState.h
+@@ -70,7 +70,7 @@ namespace atn {
    ///
    /// <embed src="images/OptionalNonGreedy.svg" type="image/svg+xml"/>
    /// </summary>
 -  class ANTLR4CPP_PUBLIC ATN;
-+  // change by mdokter@know-center.at to silence a compiler warning:
-+  // commented next line
 +  // class ANTLR4CPP_PUBLIC ATN;
  
    class ANTLR4CPP_PUBLIC ATNState {
    public:
---- runtime/src/support/Any.h	2021-07-14 14:33:26.236619490 +0200
-+++ runtime/src/support/Any.h_fixed	2021-07-14 14:29:38.422972965 +0200
-@@ -116,8 +116,9 @@
-     }
+diff --git a/runtime/src/support/Any.h b/runtime/src/support/Any.h
+index 468db9894..46d0ea842 100644
+--- a/runtime/src/support/Any.h
++++ b/runtime/src/support/Any.h
+@@ -117,7 +117,7 @@ private:
  
      T value;
--
+ 
 -    Base* clone() const {
-+    // change by mdokter@know-center.at to silence a compiler warning:
-+    // added override
 +    Base* clone() const override {
        return clone<>();
      }
