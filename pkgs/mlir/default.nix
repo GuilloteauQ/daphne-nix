@@ -1,4 +1,5 @@
-{ stdenv, fetchFromGitHub, cmake, ninja, pkg-config, clang, lld, python3, utf8cpp }:
+{ stdenv, fetchFromGitHub, cmake, ninja, pkg-config, clang, lld, python3
+, utf8cpp }:
 
 let
 
@@ -8,25 +9,15 @@ let
     rev = "20d454c79bbca7822eee88d188afb7a8747dac58";
     sha256 = "sha256-zyKTTt7Cm/jrYpGIgRTE8w+rSMNUXrwZKRnv4540cpE= ";
   };
-in
 
-stdenv.mkDerivation {
+in stdenv.mkDerivation {
   pname = "mlir";
   version = "20d454";
   src = "${llvmsrc}";
 
-  buildInputs = [
-    cmake
-    ninja
-    clang
-    lld
-    pkg-config
-    utf8cpp
-  ];
+  buildInputs = [ cmake ninja clang lld pkg-config utf8cpp ];
 
-  propagatedBuildInputs = [
-    python3
-  ];
+  propagatedBuildInputs = [ python3 ];
 
   configurePhase = ''
     mkdir build
@@ -44,16 +35,11 @@ stdenv.mkDerivation {
   '';
 
   buildPhase = ''
-    echo "NIX BuildPhase"
-    ls
     cmake --build build --target check-mlir
     cmake --build build --target install/strip
-    ls
   '';
   installPhase = ''
     echo "NIX installPhase"
-    ls build
-    ls $out
   '';
 
 }
