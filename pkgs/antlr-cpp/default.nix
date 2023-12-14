@@ -17,7 +17,7 @@ in stdenv.mkDerivation {
     ../../patches/0000-antlr-silence-compiler-warnings.patch
   ];
 
-  buildInputs = [ cmake ninja pkg-config libuuid.dev utf8cpp openjdk ];
+  buildInputs = [ cmake ninja pkg-config libuuid utf8cpp openjdk ];
 
   cmakeFlags =
     [ "-DANTLR4_INSTALL=ON" "-DUTFCPP_DIR=${utf8cpp}/include/utf8cpp" ];

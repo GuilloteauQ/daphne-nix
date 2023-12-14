@@ -66,6 +66,32 @@
           abseil-cpp = abseil-cpp;
         };
         mlir = pkgs.callPackage ./pkgs/mlir { };
+	daphne-singularity = pkgs.singularity-tools.buildImage {
+	   name = "daphne";
+    	   contents = [ daphne ];
+    	   runScript = "${daphne}/bin/daphne $@";
+	   diskSize = 2048;
+	};
+	daphne-docker = pkgs.dockerTools.buildImage {
+	   name = "daphne";
+	   tag = daphne.version;
+	   copyToRoot = pkgs.buildEnv {
+	     name = "image-root";
+	     paths = [ daphne ];
+	     pathsToLink = [ "/bin" ];
+	   };
+
+	   runAsRoot = ''
+	     #!${pkgs.runtimeShell}
+	     mkdir -p /data
+	   '';
+
+	   config = {
+	     Cmd = [ "/bin/daphne" ];
+	     WorkingDir = "/data";
+	     Volumes = { "/data" = { }; };
+	   };
+	};
       };
     };
 }

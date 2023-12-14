@@ -17,7 +17,7 @@ stdenv.mkDerivation {
   buildInputs = [
     nlohmann_json
     utf8cpp
-    libuuid.dev
+    libuuid
     libpfm
     abseil-cpp
     antlr-cpp
