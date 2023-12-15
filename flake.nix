@@ -12,6 +12,12 @@
       pkgs = import nixpkgs { inherit system; };
       pkgs21 = import nixpkgs_2111 { inherit system; };
       antlr_version = "4.9.2";
+      mySrc = pkgs.fetchFromGitHub {
+	owner = "GuilloteauQ";
+	repo = "daphne";
+	rev = "6e9ece6e34a7be7c8dd9f3bebfbdb681ef4bddbe";
+	sha256 = "sha256-mDjCnTYjQZchimGGSKKBMadMBqDsQ2ROf/CG4EQMIh4=";
+      };
     in {
       packages.${system} = rec {
         abseil-cpp = pkgs.abseil-cpp_202111.overrideAttrs
@@ -71,6 +77,36 @@
     	   contents = [ daphne ];
     	   runScript = "${daphne}/bin/daphne $@";
 	   diskSize = 2048;
+	};
+	myDaphne = daphne.overrideAttrs(finalAttrs: previousAttrs: {
+	  src = mySrc;
+	  version = previousAttrs.version + "-quentin";
+	});
+	mydaphne-singularity = pkgs.singularity-tools.buildImage {
+	   name = "my-daphne";
+    	   contents = [ myDaphne ];
+    	   runScript = "${myDaphne}/bin/daphne $@";
+	   diskSize = 2048;
+	};
+	mydaphne-docker = pkgs.dockerTools.buildImage {
+	   name = "mydaphne";
+	   tag = myDaphne.version;
+	   copyToRoot = pkgs.buildEnv {
+	     name = "image-root";
+	     paths = [ myDaphne ];
+	     pathsToLink = [ "/bin" ];
+	   };
+
+	   runAsRoot = ''
+	     #!${pkgs.runtimeShell}
+	     mkdir -p /data
+	   '';
+
+	   config = {
+	     Cmd = [ "/bin/daphne" ];
+	     WorkingDir = "/data";
+	     Volumes = { "/data" = { }; };
+	   };
 	};
 	daphne-docker = pkgs.dockerTools.buildImage {
 	   name = "daphne";
