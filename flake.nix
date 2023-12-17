@@ -71,7 +71,7 @@
           name = "daphne";
           contents = [ daphne ];
           runScript = "${daphne}/bin/daphne $@";
-          diskSize = 2048;
+          diskSize = 4096;
         };
         daphne-docker = pkgs.dockerTools.buildImage {
           name = "daphne";
